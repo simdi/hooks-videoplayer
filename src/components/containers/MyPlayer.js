@@ -25,6 +25,7 @@ const themeLight = {
 }
 
 const MyPlayer = props => {
+  const { state } = props;
   return (
     <ThemeProvider theme={state.nightMode ? theme : themeLight}>
       <StyledMyPlayer>
