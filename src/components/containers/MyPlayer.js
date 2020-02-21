@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Video from '../Video';
 import Playlist from './Playlist';
@@ -24,14 +24,56 @@ const themeLight = {
   color: "#353535"
 }
 
-const MyPlayer = props => {
-  const { state } = props;
+const MyPlayer = ({match, history, location}) => {
+  const videos = JSON.parse(document.querySelector('[name="videos"]').value);
+  const initialState = {
+    videos: videos.playlist,
+    active: videos.playlist[0],
+    nightMode: true,
+    playlistId: videos.playlistId,
+    autoplay: false
+  };
+  const [state, setstate] = useState(initialState);
+
+  useEffect(() => {
+    const videoId = match.params.activeVideo;
+    if (videoId) {
+      const newVideoId = state.videos.findIndex(x => x.id === videoId);
+      setstate(prev => ({
+        ...prev,
+        active: prev.videos[newVideoId],
+        autoplay: location.autoplay
+      }));
+    } else {
+      history.push({
+        pathname: `${state.active.id}`,
+        autoplay: false
+      })
+    }
+    return () => {};
+  }, [history, location.autoplay, match.params.activeVideo, state.active.id, state.videos])
+
+  const nightModeCallback = () => {};
+  const endCallback = () => {};
+  const progressCallback = () => {};
   return (
     <ThemeProvider theme={state.nightMode ? theme : themeLight}>
-      <StyledMyPlayer>
-        <Video />
-        <Playlist />
-      </StyledMyPlayer>
+      {state.videos !== null ? (
+        <StyledMyPlayer>
+          <Video
+            active={state.active}
+            autoplay={state.autoplay}
+            endCallback={endCallback}
+            progressCallback={progressCallback}
+          />
+          <Playlist
+            videos={state.videos}
+            active={state.active}
+            nightModeCallback={nightModeCallback}
+            nightMode={state.nightMode}
+          />
+        </StyledMyPlayer>
+      ) : null }
     </ThemeProvider>
   )
 }
