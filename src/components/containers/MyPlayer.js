@@ -33,13 +33,13 @@ const MyPlayer = ({match, history, location}) => {
     playlistId: videos.playlistId,
     autoplay: false
   };
-  const [state, setstate] = useState(initialState);
+  const [state, setState] = useState(initialState);
 
   useEffect(() => {
     const videoId = match.params.activeVideo;
     if (videoId) {
       const newVideoId = state.videos.findIndex(x => x.id === videoId);
-      setstate(prev => ({
+      setState(prev => ({
         ...prev,
         active: prev.videos[newVideoId],
         autoplay: location.autoplay
