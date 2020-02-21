@@ -27,18 +27,19 @@ const themeLight = {
 const MyPlayer = (props) => {
   const {match, history, location} = props;
   const videos = JSON.parse(document.querySelector('[name="videos"]').value);
+  const savedState = JSON.parse(localStorage.getItem(`${videos.playlistId}`));
   const initialState = {
-    videos: videos.playlist,
-    active: videos.playlist[0],
-    nightMode: true,
-    playlistId: videos.playlistId,
-    autoplay: false
+    videos: savedState ? savedState.videos : videos.playlist,
+    active: savedState ? savedState.active : videos.playlist[0],
+    nightMode: savedState ? savedState.nightMode : true,
+    playlistId: savedState ? savedState.playlistId : videos.playlistId,
+    autoplay: false,
   };
   const [state, setState] = useState(initialState);
 
-  // useEffect(() => {
-  //   localStorage.setItem(`${state.playlistId}`, JSON.stringify({ ...state }));
-  // }, [state]);
+  useEffect(() => {
+    localStorage.setItem(`${state.playlistId}`, JSON.stringify({ ...state }));
+  }, [state]);
 
   useEffect(() => {
     const videoId = match.params.activeVideo;
