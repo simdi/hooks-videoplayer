@@ -36,6 +36,10 @@ const MyPlayer = (props) => {
   };
   const [state, setState] = useState(initialState);
 
+  // useEffect(() => {
+  //   localStorage.setItem(`${state.playlistId}`, JSON.stringify({ ...state }));
+  // }, [state]);
+
   useEffect(() => {
     const videoId = match.params.activeVideo;
     if (videoId) {
